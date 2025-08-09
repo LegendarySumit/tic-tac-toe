@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #5d1836, #FF00FF, #8A2BE2, #00FFFF);
+    background-size: 300% 300%;
+    /*If I would have considered 100% 100% then the animation would have been barely noticeable */
+    animation: gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+main h1,
+p.description {
+    text-align: center;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+main h1 {
+    font-size: 4rem;
+}
+
+main p.description {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+    margin-top: 40px;
+}
+
+.game {
+    display: flex;
+    column-gap: 10px;
+    padding-bottom: 10px;
+}
+
+.box {
+    width: 100px;
+    height: 100px;
+    border: 2px solid white;
+    border-radius: 1rem;
+    font-size: 3rem;
+    color: #5d1836;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgb(68 26 85 / 40%);
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease;
+}
+
+.box:hover {
+    transform: translateZ(-5px) scale(1.05);
+    background-color: #6fb8ba;
+}
+
+#turn-status {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+#winner-message {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #ffcc00;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: none;
+}
+
+#reset-button {
+    display: block;
+    margin: 0 auto 30px;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 25px;
+    background: #5628de;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(127, 90, 240, 0.8);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#reset-button:hover {
+    background-color: #7a5de8;
+    transform: scale(1.05);
+}
+
+
+.updates {
+    margin: 20px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 1.5em;
+}
+
+#turn-status {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: white;
+}
+
+#winner-message {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #ffcc00;
+    display: none;
+}
+
+#reset-button {
+    display: block;
+    margin: 0 auto 30px;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 25px;
+    background: #5628de;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(127, 90, 240, 0.8);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#reset-button:hover {
+    background-color: #7a5de8;
+    transform: scale(1.05);
+}
+
+/* Strike line styling */
+.strike {
+    position: relative;
+}
+
+.strike::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 0, 0, 0.7);
+    transform: translateY(-50%);
+    pointer-events: none;  /* Prevent mouse events */
+    z-index: 10;
+}
