@@ -173,16 +173,26 @@ main p.description {
     transform: translateY(-50%);
     pointer-events: none;  /* Prevent mouse events */
     z-index: 10;
-
 }
 
 @media (max-width: 542px) {
+
+    body {
+        margin-top: 40px;
+    }
+
     main h1 {
+        margin-bottom: 15px;
         font-size: 3rem;
     }
 
     main p.description {
         font-size: 1.2rem;
+        margin-bottom: 50px;
+    }
+
+    .container {
+        margin-top: 20px;
     }
 
     .box {
@@ -205,6 +215,15 @@ main p.description {
 }
 
 @media (max-width: 403px) {
+    
+    body {
+        margin-top: 50px;
+    }
+
+    main p.description {
+        margin-bottom: 60px;
+    }
+
     main h1 {
         font-size: 2rem;
     }
