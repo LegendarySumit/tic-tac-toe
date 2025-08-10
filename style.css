@@ -173,4 +173,44 @@ main p.description {
     transform: translateY(-50%);
     pointer-events: none;  /* Prevent mouse events */
     z-index: 10;
+
+}
+
+@media (max-width: 542px) {
+    main h1 {
+        font-size: 3rem;
+    }
+
+    main p.description {
+        font-size: 1.2rem;
+    }
+
+    .box {
+        width: 90px;
+        height: 90px;
+        font-size: 2.5rem;
+    }
+
+    #turn-status {
+        font-size: 1.2rem;
+    }
+
+    #winner-message {
+        font-size: 1.3rem;
+    }
+
+    #reset-button {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 403px) {
+    main h1 {
+        font-size: 2rem;
+    }
+
+    main p.description {
+        font-size: 1rem;
+    }
+
 }
