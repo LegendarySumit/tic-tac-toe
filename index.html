@@ -2,48 +2,65 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic-Tac-Toe : The Ultimate Showdown</title>
-    <link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <main>
-        <h1>⭕ Tic Tac Toe ❌</h1>
-        <p class="description">The classic Xs and Os battle — challenge your mind and your friends!</p>
+    <main class="app-shell">
+        <div class="background-orb orb-1"></div>
+        <div class="background-orb orb-2"></div>
 
-        <div class="container">
-            <div class="game">
-                <button class="box"></button>
-                <button class="box"></button>
-                <button class="box"></button>
-            </div>
-            <div class="game">
-                <button class="box"></button>
-                <button class="box"></button>
-                <button class="box"></button>
-            </div>
-            <div class="game">
-                <button class="box"></button>
-                <button class="box"></button>
-                <button class="box"></button>
-            </div>
-        </div>
+        <section class="game-shell glass-card">
+            <header class="game-header">
+                <h1>⭕ TIC TAC TOE ❌</h1>
+                <p class="description">
+                    The classic Xs and Os battle — challenge your mind and your friends!
+                </p>
+            </header>
 
-        <div class="updates">
-            
-        <div id="turn-status"></div>
-        <div id="winner-message"></div>
-            
-        </div>
-        <button id="reset-button">Reset Game</button>
+            <section class="players-panel">
+                <div class="player-card" id="player1-card">
+                    <div class="player-label">PLAYER 1</div>
+                    <div class="player-name" id="player1-name">Waiting…</div>
+                    <div class="player-symbol">Symbol: <span id="player1-symbol">-</span></div>
+                </div>
+                <div class="vs-text">VS</div>
+                <div class="player-card" id="player2-card">
+                    <div class="player-label">PLAYER 2</div>
+                    <div class="player-name" id="player2-name">Waiting…</div>
+                    <div class="player-symbol">Symbol: <span id="player2-symbol">-</span></div>
+                </div>
+            </section>
 
+            <section class="board-wrapper">
+                <div class="container">
+                    <div class="game">
+                        <button class="box"></button><button class="box"></button><button class="box"></button>
+                    </div>
+                    <div class="game">
+                        <button class="box"></button><button class="box"></button><button class="box"></button>
+                    </div>
+                    <div class="game">
+                        <button class="box"></button><button class="box"></button><button class="box"></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="updates">
+                <div id="turn-status"></div>
+                <div id="winner-message"></div>
+            </section>
+
+            <section class="controls">
+                <button id="reset-button">RESET GAME</button>
+            </section>
+        </section>
     </main>
+
     <script src="script.js"></script>
-
 </body>
-
 
 </html>
