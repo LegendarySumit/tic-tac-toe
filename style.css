@@ -15,11 +15,13 @@
 
 html,
 body {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;   /* allow vertical scroll if needed */
     font-family: "Segoe UI", sans-serif;
 }
+
 
 body {
     background: linear-gradient(135deg, #a835e0, #c02dc1, #7050ff, #5036e0);
@@ -82,7 +84,9 @@ body {
 .game-shell {
     width: 100%;
     max-width: 880px;
-    height: 92vh;
+    min-height: auto;
+    height: auto;
+    margin: auto;
     background: rgba(255, 255, 255, 0.22);
     backdrop-filter: blur(28px);
     border-radius: 40px;
@@ -150,15 +154,16 @@ body {
 .board-wrapper {
     display: flex;
     justify-content: center;
+    margin-top: 22px;
 }
 
 .container {
     background: rgba(0, 0, 0, .35);
     border-radius: 20px;
-    padding: 14px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     border: 1px solid rgba(255, 255, 255, .32);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, .55);
 }
@@ -169,12 +174,12 @@ body {
 }
 
 .box {
-    width: 80px;
-    height: 80px;
+    width: 95px;
+    height: 95px;
     background: rgba(0, 0, 0, 0.42);
     border: 1px solid rgba(255, 255, 255, .32);
     border-radius: 15px;
-    font-size: 2.3rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #fff;
     cursor: pointer;
@@ -275,4 +280,54 @@ body {
 
 #reset-button:active {
     transform: scale(.97);
+}
+
+/* ============================= */
+/* TINY DEVICES (<=380px)        */
+/* ============================= */
+@media (max-width: 380px) {
+
+    .game-header h1 {
+        white-space: nowrap;
+        font-size: 1.6rem; /* keep scaling manageable */
+    }
+    .players-panel {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .player-card {
+        width: 88%;
+        min-width: 0;
+    }
+
+    .container {
+        width: 92%;
+        row-gap: 6px;
+        column-gap: 6px;
+        padding: 10px;
+    }
+
+    .game {
+        row-gap: 6px;
+        column-gap: 6px;
+    }
+    
+
+    .box {
+        width: 68px;
+        height: 68px;
+        font-size: 2rem;
+    }
+
+    #turn-status,
+    #winner-message {
+        font-size: 1rem;
+    }
+
+    #reset-button {
+        font-size: .88rem;
+        padding: 8px 22px;
+    }
 }
