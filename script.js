@@ -1,11 +1,26 @@
 window.addEventListener('DOMContentLoaded', () => {
-
     setTimeout(() => {
+        const boxes = document.querySelectorAll('.box');
+        const turnStatus = document.getElementById('turn-status');
+        const winnerMessage = document.getElementById('winner-message');
+        const resetButton = document.getElementById('reset-button');
 
-        let boxes = document.querySelectorAll('.box');
-        let turnStatus = document.getElementById('turn-status');
-        let winnerMessage = document.getElementById('winner-message');
-        let resetButton = document.getElementById('reset-button');
+        const player1NameEl = document.getElementById('player1-name');
+        const player2NameEl = document.getElementById('player2-name');
+        const player1SymbolEl = document.getElementById('player1-symbol');
+        const player2SymbolEl = document.getElementById('player2-symbol');
+        const player1Card = document.getElementById('player1-card');
+        const player2Card = document.getElementById('player2-card');
+
+        const moveSound = document.getElementById('move-sound');
+        const winSound = document.getElementById('win-sound');
+
+        function safePlay(sound) {
+            try {
+                sound.currentTime = 0;
+                sound.play();
+            } catch(e) {}
+        }
 
         function getValidName(playerLabel) {
             let name;
@@ -14,160 +29,127 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (!name || name.trim() === '') {
                     alert(`${playerLabel}'s name cannot be empty. Using default name.`);
-                    return playerLabel; // fallback default
+                    return playerLabel;
                 }
 
                 name = name.trim();
-
-                if (name.length > 10) {
-                    alert(`${playerLabel}'s name is too long. Please enter again.`);
-                    continue;
-                }
-                if (name.length < 3) {
-                    alert(`${playerLabel}'s name is too short. Please enter again.`);
-                    continue;
-                }
-
+                if (name.length < 3) { alert("Too short"); continue; }
+                if (name.length > 10) { alert("Too long"); continue; }
                 return name;
             }
         }
 
-        // Get Player 1 and Player 2 names with validation
         let a = getValidName("Player 1");
         let b = getValidName("Player 2");
-
-        // Ensure names are not same
         while (a === b) {
-            alert("Player 1 and Player 2 cannot have the same name.");
+            alert("Names cannot match");
             b = getValidName("Player 2");
         }
 
         let rand = Math.random();
-        let choice;
+        let choice = rand < 0.5 ?
+            prompt(`${a} choose X or O:`).toUpperCase() :
+            prompt(`${b} choose X or O:`).toUpperCase();
 
-        if (rand < 0.5) {
-            choice = prompt(`${a}, choose your symbol (X or O):`).toUpperCase();
-        } else {
-            choice = prompt(`${b}, choose your symbol (X or O):`).toUpperCase();
+        while (choice !== "X" && choice !== "O") {
+            choice = prompt("Choose X or O:").toUpperCase();
         }
 
-        while (choice !== 'X' && choice !== 'O') {
-            alert("Invalid choice! Please enter X or O.");
-            choice = prompt("Choose your symbol (X or O):").toUpperCase();
-        }
-
-        // Assign symbols
         let player1 = { name: a, symbol: choice };
-        let player2 = { name: b, symbol: choice === 'X' ? 'O' : 'X' };
+        let player2 = { name: b, symbol: choice === "X" ? "O" : "X" };
+
+        player1NameEl.textContent = player1.name;
+        player2NameEl.textContent = player2.name;
+        player1SymbolEl.textContent = player1.symbol;
+        player2SymbolEl.textContent = player2.symbol;
 
         let currentPlayer = rand < 0.5 ? player1 : player2;
 
-        let initTurn = true;
-
-        if (initTurn) {
-            turnStatus.textContent = `${currentPlayer.name}'s turn (${currentPlayer.symbol})`;
-            initTurn = false;
+        function updateActive() {
+            player1Card.classList.toggle("active", currentPlayer === player1);
+            player2Card.classList.toggle("active", currentPlayer === player2);
         }
+        updateActive();
 
-        let board = ["", "", "", "", "", "", "", "", ""];
+        turnStatus.textContent = `${currentPlayer.name}'s turn (${currentPlayer.symbol})`;
 
+        let board = Array(9).fill("");
         let gameOver = false;
 
-        boxes.forEach((box, index) => {
-            // Hover preview
-            box.addEventListener('mouseenter', () => {
-                if (!gameOver && board[index] === "") {
-                    box.style.color = "rgba(255, 255, 255, 0.4)"; // faint white
-                    box.textContent = currentPlayer.symbol;
+        const winningConditions = [
+            [0,1,2],[3,4,5],[6,7,8],
+            [0,3,6],[1,4,7],[2,5,8],
+            [0,4,8],[2,4,6]
+        ];
+
+        resetButton.addEventListener("click", () => {
+            boxes.forEach(b => {
+                b.textContent = "";
+                b.classList.remove("strike","placed");
+                b.style.color = "";
+            });
+            board.fill("");
+            gameOver = false;
+            winnerMessage.style.display = "none";
+            turnStatus.style.display = "block";
+            turnStatus.textContent = `${currentPlayer.name}'s turn (${currentPlayer.symbol})`;
+            updateActive();
+        });
+
+        boxes.forEach((box, i) => {
+            box.addEventListener("mouseenter", () => {
+                if (!gameOver && board[i] === "") {
+                    box.style.color="rgba(255,255,255,0.4)";
+                    box.textContent=currentPlayer.symbol;
                 }
             });
-
-            box.addEventListener('mouseleave', () => {
-                if (board[index] === "") {
-                    box.textContent = ""; // remove preview
-                }
-                box.style.color = ""; // reset style
+            box.addEventListener("mouseleave", () => {
+                if (board[i] === "") box.textContent="";
+                box.style.color="";
             });
 
-            box.addEventListener('click', () => {
+            box.addEventListener("click", () => {
+                if (gameOver || board[i] !== "") return;
 
-                if (gameOver)
-                    return;
+                box.textContent=currentPlayer.symbol;
+                box.style.color="";
+                box.classList.add("placed");
+                board[i]=currentPlayer.symbol;
 
-                // Check if box is already filled
-                if (board[index] !== "")
-                    return;
+                safePlay(moveSound);
 
-                // Remove hover preview instantly on click
-                box.textContent = "";
-                box.style.color = "";
-
-                // Place the symbol
-                box.innerText = currentPlayer.symbol;
-                board[index] = currentPlayer.symbol;
-
-                // Check for a win
-                let winningConditions = [
-                    [0, 1, 2],
-                    [3, 4, 5],
-                    [6, 7, 8],
-                    [0, 3, 6],
-                    [1, 4, 7],
-                    [2, 5, 8],
-                    [0, 4, 8],
-                    [2, 4, 6]
-                ];
-
-                // Check for a winner
                 for (let condition of winningConditions) {
-                    if (board[condition[0]] === currentPlayer.symbol &&
+                    if (
+                        board[condition[0]] === currentPlayer.symbol &&
                         board[condition[1]] === currentPlayer.symbol &&
-                        board[condition[2]] === currentPlayer.symbol) {
-
-                        for (let i = 0; i < 3; i++) {
-                            boxes[condition[i]].classList.add('strike');
-                        }
+                        board[condition[2]] === currentPlayer.symbol
+                    ) {
+                        condition.forEach(idx => {
+                            boxes[idx].classList.add("strike");
+                        });
 
                         winnerMessage.textContent = `🎉 ${currentPlayer.name} wins! 🎉`;
-                        winnerMessage.style.display = 'block';
-
-                        gameOver = true;
-                        turnStatus.style.display = 'none';
-                    }
-                    else if (!gameOver) {
-                        // Check for a draw
-                        if (!board.includes("")) {
-                            winnerMessage.textContent = `It's a draw! 🤝`;
-                            winnerMessage.style.display = 'block';
-                            gameOver = true;
-                            turnStatus.style.display = 'none';
-                        }
+                        winnerMessage.style.display="block";
+                        turnStatus.style.display="none";
+                        safePlay(winSound);
+                        gameOver=true;
+                        return;
                     }
                 }
 
-                // Switch player
-                currentPlayer = (currentPlayer === player1) ? player2 : player1;
+                if (!board.includes("") && !gameOver) {
+                    winnerMessage.textContent = `It's a draw! 🤝`;
+                    winnerMessage.style.display="block";
+                    turnStatus.style.display="none";
+                    safePlay(winSound);
+                    gameOver=true;
+                    return;
+                }
 
-                // Update turn status
+                currentPlayer = currentPlayer === player1 ? player2 : player1;
                 turnStatus.textContent = `${currentPlayer.name}'s turn (${currentPlayer.symbol})`;
-
-                resetButton.addEventListener('click', () => {
-
-                    // Clear board UI & reset board array
-                    boxes.forEach(box => {
-                        box.classList.remove('strike');
-                        box.textContent = "";
-                        box.style.color = "";
-                    });
-                    board = ["", "", "", "", "", "", "", "", ""];
-
-                    // Reset game state
-                    gameOver = false;
-                    winnerMessage.style.display = 'none';
-                    turnStatus.style.display = 'block';
-                    turnStatus.textContent = `${currentPlayer.name}'s turn (${currentPlayer.symbol})`;
-                });
+                updateActive();
             });
         });
-    }, 100);
+    },100);
 });
